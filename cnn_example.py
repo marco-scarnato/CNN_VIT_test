@@ -1,15 +1,9 @@
-import kagglehub
 import feature_engineering as fe
-import tensorflow as tf
 import cnn
 
-# Download latest version
-path = kagglehub.dataset_download("d4rklucif3r/cat-and-dogs")
+import tensorflow as tf
 
-print("Path to dataset files:", path)
-path = path + "\\dataset\\"
-
-train_dir, _, test_dir = fe.dataset_sub_division(path)
+train_dir, _, test_dir = fe.dataset_sub_division("dataset")
 
 # Parametri del dataset
 img_size = (256, 256)
@@ -31,7 +25,7 @@ test_ds = tf.keras.utils.image_dataset_from_directory(
 
 # Determina il numero di classi automaticamente
 num_classes = len(train_ds.class_names)
-print(f"Numero di classi: {num_classes}, Classi: {train_ds.class_names}")
+print(f"\nNumero di classi: {num_classes}, Classi: {train_ds.class_names}")
 
 # ✅ Convertire i target in one-hot encoding
 def one_hot_encode(image, label):
@@ -47,10 +41,7 @@ print(tf.config.list_physical_devices('GPU'))
 model = cnn.CNN_model(num_classes).model
 
 # Addestramento della rete neurale
-model.fit(
-    train_ds,
-    epochs=10,  # Modifica il numero di epoche se necessario
-)
+#model.fit(train_ds,epochs=10)
 
 test_loss, test_acc = model.evaluate(test_ds)
 
